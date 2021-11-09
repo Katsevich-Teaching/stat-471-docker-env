@@ -15,5 +15,4 @@ This is the repository for building Wharton STAT 471's docker environment.
 
 ## Known Issue
 
-- To get rid of Error `Could not load dynamic library 'libcudart.so`, one must manually run `sudo chmod a+r /usr/lib/x86_64-linux-gnu/libcuda*` in Rstudio's termianl. We should be able to change the file permision in the dockerfile but so far it does not work on my side. Alternatively, we could directly upload the image with updated file permission.
 - Now the compuation is on CPU. We need to integrate NVIDIA Container Toolkit into the environment to have the code run on GPU.

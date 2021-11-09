@@ -10,4 +10,4 @@ services:
       - PASSWORD=stat-471
       - DISABLE_AUTH=true
     volumes: 
-      - .:/home/rstudio
+      - .:/home/rstudio/stat-471
