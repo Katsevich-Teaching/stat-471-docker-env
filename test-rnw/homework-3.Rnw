@@ -1,0 +1,235 @@
+% (C) Brett Klamer - MIT - http://opensource.org/licenses/MIT
+% Please contact me if you find any errors or make improvements
+% Contact details at brettklamer.com
+
+\documentclass[11pt,letterpaper,english,oneside]{article} % article class is a standard class
+%==============================================================================
+%Load Packages
+%==============================================================================
+\usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry} % easy page margins
+\usepackage[utf8]{inputenc} % editor uses utf-8 encoding
+\usepackage[T1]{fontenc} % T1 font pdf output
+\usepackage{lmodern} % Latin modern roman font
+\usepackage{bm, bbm} % bold and blackboard bold math symbols
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % math packages
+\usepackage[final]{microtype} % better microtypography
+\usepackage{graphicx} % for easier grahics handling
+\usepackage[hidelinks, colorlinks=true, linkcolor = blue, urlcolor = blue]{hyperref} % to create hyperlinks
+\usepackage{float} % tells floats to stay [H]ere!
+\usepackage{mdframed} % it's better than framed. knitr uses framed so settings won't conflict
+\usepackage{enumitem} % nice lists
+\usepackage{fancyhdr} % nice headers
+\usepackage{caption}  % to control figure and table captions
+
+\captionsetup{width=0.9\textwidth, justification = raggedright}
+
+%==============================================================================
+% Enter name and homework title here
+%==============================================================================
+\author{Name}
+\title{Homework 3}
+\date{Due Sunday, October 24 at 11:59pm}
+
+%==============================================================================
+% Put title and author in PDF properties
+%==============================================================================
+\makeatletter % change interpretation of @
+\hypersetup{pdftitle={\@title},pdfauthor={\@author}}
+
+
+%==============================================================================
+% Header settings
+%==============================================================================
+\pagestyle{fancy} % turns on fancy header styles
+\fancyhf{} % clear all header and footer fields
+\makeatletter
+\lhead{\@author} % left header
+\chead{\@title} % center header
+\makeatother
+\rhead{Page \thepage} % right header
+\setlength{\headheight}{13.6pt} % fixes minor warning
+\makeatother % change back interpretation of @
+
+%==============================================================================
+% List spacing
+%==============================================================================
+\setlist[itemize]{parsep=0em} % fix itemize spacing
+\setlist[enumerate]{parsep=0em} % fix enumerate spacing
+
+%==============================================================================
+% Float spacing (changes spacing of tables, graphs, etc)
+%==============================================================================
+%\setlength{\textfloatsep}{3pt}
+%\setlength{\intextsep}{3pt}
+
+%==============================================================================
+% Define Problem and Solution Environments
+%==============================================================================
+\theoremstyle{definition} % use definition's look
+\newtheorem{problem}{Problem}
+\newtheorem{solution}{Solution}
+\mdfsetup{ % box margin fix for mdframe and how it plays with parskip and others.
+innerleftmargin=4pt,
+innerrightmargin=4pt,
+innertopmargin=-1pt,
+innerbottommargin=4pt}
+% \newenvironment{prob}{\begin{mdframed}\begin{problem}\hspace{0pt}}{\end{problem}\end{mdframed}}
+\newenvironment{prob}{\clearpage \begin{problem}\hspace{0pt}}{\end{problem}}
+\newenvironment{sol}{\begin{solution}\hspace{0pt}}{\end{solution}}
+
+%==============================================================================
+% set knitr options
+%==============================================================================
+% latex (change space before and after knitr kframe; based on framed package)
+\setlength{\OuterFrameSep}{0.3em}
+% R
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+# inline hook to process the output of \Sexpr{} statements to just 2 digits
+inline_hook <- function(x) {
+  if(is.numeric(x)) x <- round(x, 2)
+  paste(as.character(x), collapse=", ")
+}
+knit_hooks$set(inline = inline_hook)
+
+# cache all chunks
+opts_chunk$set(cache = TRUE)
+
+# create directory for figures
+if(!dir.exists("figures")){
+  dir.create("figures")
+}
+@
+
+\begin{document}
+
+\maketitle
+4
+\section{Instructions}
+
+\paragraph{Setup.} Pull the latest version of this assignment from Github and set your working directory to \texttt{stat-961-fall-2021/homework/homework-3}. Consult the \href{https://github.com/Katsevich-Teaching/stat-961-fall-2021/blob/main/getting-started/getting-started.pdf}{getting started guide} if you need to brush up on \texttt{R}, \texttt{LaTeX}, or \texttt{Git}.
+
+\paragraph{Collaboration.} The collaboration policy is as stated on the Syllabus:
+
+\begin{quote}
+``Students are permitted to work together on homework assignments, but solutions must be written up and submitted individually. Students must disclose any sources of assistance they received; furthermore, they are prohibited from verbatim copying from any source and from consulting solutions to problems that may be available online and/or from past iterations of the course.''
+\end{quote}
+
+\noindent In accordance with this policy, \\
+
+\noindent \textit{Please list anyone you discussed this homework with:} \\
+
+\noindent \textit{Please list what external references you consulted (e.g. articles, books, or websites):} 
+
+\paragraph{Writeup.} Use this document as a starting point for your writeup, adding your solutions between \verb|\begin{sol}| and \verb|\end{sol}|. See the \href{https://github.com/Katsevich-Teaching/stat-961-fall-2021/blob/main/getting-started/preparing-reports.pdf}{preparing reports guide} for guidance on compilation, creation of figures and tables, and presentation quality. Show all the code you wrote to produce your numerical results, and include complete derivations typeset in LaTeX for the mathematical questions. 
+
+\paragraph{Programming.}
+
+The \texttt{tidyverse} paradigm for data manipulation (\texttt{dplyr}) and plotting (\texttt{ggplot2}) are strongly encouraged, but points will not be deducted for using base \texttt{R}. 
+<<message=FALSE, cache = FALSE>>=
+library(tidyverse)
+@
+
+\paragraph{Grading.} Each sub-part of each problem will be worth 3 points: 0 points for no solution or completely wrong solution; 1 point for some progress; 2 points for a mostly correct solution; 3 points for a complete and correct solution modulo small flaws. The presentation quality of the solution for each problem (as exemplified by the guidelines in Section 3 of the \href{https://github.com/Katsevich-Teaching/stat-961-fall-2021/blob/main/getting-started/preparing-reports.pdf}{preparing reports guide}) will be evaluated out of an additional 3 points.
+
+\paragraph{Submission.} Compile your writeup to PDF and submit to \href{https://www.gradescope.com/courses/284562}{Gradescope}.
+
+\clearpage
+
+\begin{prob} \label{prob:intercept-only}\textbf{Heteroskedasticity and correlated errors in the intercept-only model.} \\
+
+\noindent Suppose that 
+\begin{equation}
+y_i = \beta_0 + \epsilon_i, \quad \text{where } \bm \epsilon \sim N(0, \bm \Sigma)
+\label{eq:arbitrary-correlation}
+\end{equation}
+for some positive definite $\bm \Sigma \in \mathbb R^{n \times n}$. The goal of this problem is to investigate the effects of heteroskedasticity and correlated errors on the validity and efficiency of least squares estimation and inference.
+
+\begin{enumerate}
+
+\item[(a)] (Validity of least squares inference) What is the usual least squares estimate $\widehat \beta^{\text{LS}}_0$ for $\beta_0$ (from Unit 2)? What is its variance under the model~\eqref{eq:arbitrary-correlation}? What is the usual variance estimate $\widehat{\text{Var}}[\widehat \beta^{\text{LS}}_0]$ (from Unit 2), and what is this estimator's expectation under~\eqref{eq:arbitrary-correlation}? The ratio 
+\begin{equation}
+\tau_1 \equiv \frac{\mathbb E[\widehat{\text{Var}}[\widehat \beta^{\text{LS}}_0]]}{\text{Var}[\widehat \beta^{\text{LS}}_0]}
+\label{eq:tau-1}
+\end{equation}
+is a measure of the validity of usual least squares inference under~\eqref{eq:arbitrary-correlation}. Write down an expression for $\tau_1$, and discuss the implications of $\tau_1$ for the Type-I error of the hypothesis test of $H_0: \beta_0 = 0$ and for the coverage of the confidence interval for $\beta_0$.
+
+\item[(b)] (Efficiency of least squares estimator) Let's assume $\bm \Sigma$ is known. We could get valid inference based on $\widehat \beta^{\text{LS}}_0$ by using the variance formula from part (a). Alternatively, we could use the maximum likelihood estimate $\widehat \beta^{\text{ML}}_0$ for $\beta_0$. What is the variance of $\widehat \beta^{\text{ML}}_0$? The ratio
+\begin{equation}
+\tau_2 \equiv \frac{\text{Var}[\widehat \beta^{\text{LS}}_0]}{\text{Var}[\widehat \beta^{\text{ML}}_0]}
+\label{eq:tau-2}
+\end{equation}
+is a measure of the efficiency of the usual least squares estimator under~\eqref{eq:arbitrary-correlation}, recalling that the maximum likelihood estimator is most efficient. Write down an expression for $\tau_2$, and discuss the implications of $\tau_2$ for the power of the hypothesis test of $H_0: \beta_0 = 0$ and for the width of the confidence interval for $\beta_0$.
+
+\item[(c)] (Special case: Heteroskedasticity) Suppose $\bm \Sigma = \text{diag}(\sigma^2_1, \dots, \sigma^2_n)$ for some $\sigma^2_1, \dots, \sigma^2_n > 0$. Compute the ratios $\tau_1$ and $\tau_2$ defined in equations~\eqref{eq:tau-1} and~\eqref{eq:tau-2}, respectively. How do these ratios depend on $(\sigma^2_1, \dots, \sigma^2_n)$, and what are the implications for validity and efficiency?
+
+\item[(d)] (Special case: Correlated errors) Suppose $(\epsilon_1, \dots, \epsilon_n)$ are \textit{equicorrelated}, i.e.
+\begin{equation}
+\Sigma_{j_1j_2} = 
+\begin{cases}
+1, \quad &\text{if } j_1 = j_2; \\
+\rho, \quad &\text{if } j_1 \neq j_2. 
+\end{cases}
+\end{equation}
+for some $\rho \geq 0$. Compute the ratios $\tau_1$ and $\tau_2$ defined in equations~\eqref{eq:tau-1} and~\eqref{eq:tau-2}, respectively. How do these ratios depend on $\rho$, and what are the implications for validity and efficiency?
+\end{enumerate}
+
+\end{prob}
+
+\begin{sol}
+
+\end{sol}
+
+\begin{prob} \label{prob:robust-standard-errors}\textbf{Comparing constructions of heteroskedasticity-robust standard errors.} \\
+
+\noindent Suppose that
+\begin{equation}
+\bm y = \bm X \bm \beta + \bm \epsilon, \quad \epsilon_i \overset{\text{ind}}\sim N(0, \sigma^2_i).
+\end{equation}
+Two approaches to obtaining heteroskedasticity-robust standard errors are the pairs bootstrap and Huber-White standard errors. The goal of this problem is to compare the coverage and width of confidence intervals obtained from these two approaches.
+
+\begin{enumerate}
+\item[(a)] Write a function called \verb|pairs_bootstrap|, which inputs arguments $\bm X$, $\bm y$, and $B$ and outputs an estimated $p \times p$ covariance matrix $\widehat{\text{Var}}[\widehat{\bm \beta}]$ based on $B$ resamples of the pairs bootstrap.
+
+\item[(b)] Write a function called \verb|huber_white|, which inputs arguments $\bm X$ and $\bm y$ and outputs an estimated $p \times p$ covariance matrix $\widehat{\text{Var}}[\widehat{\bm \beta}]$ based on the Huber-White formula.
+
+\item[(c)] Generate $n = 50$ $(x,y)$ pairs by setting $x$ to be equally-spaced values between 0 and 1 and drawing $y_i = \beta_0 + \beta_1 x_i + \epsilon_i$, where $\epsilon_i \overset{\text{ind}}\sim N(0, 9x_i^2)$, $\beta_0 = 2, \beta_1 = 3$. Create a scatter plot of these points, the least squares line, and three confidence bands: the standard least squares confidence band as well as those resulting from the pairs bootstrap (with $B = 500$) and the Huber-White formula. Comment on the relative widths of these three bands depending on the value of $x$.
+
+\item[(d)] Repeat the experiment from part (c) 100 times to compute the coverage and average width of the three confidence bands for each value of $x$. Plot these two metrics as a function of $x$, and comment on the results.
+
+\end{enumerate}
+
+\end{prob}
+
+\begin{sol}
+
+\end{sol}
+
+\begin{prob} \label{prob:ad-data}\textbf{Case study: Advertising data..} \\
+
+\noindent In this problem, we will analyze a data set related to advertising spending. It contains the sales of a product (in thousands of units) in 200 different markets, along with advertising budgets (in thousands of dollars) for the product in each of those markets for three different media: TV, radio, and newspaper. The goal is to learn about the relationship between these three advertising budgets (predictors) and sales (response).
+
+<<message = FALSE>>=
+ad_data = read_tsv("Advertising.tsv")
+print(ad_data, n = 5)
+@
+
+\begin{enumerate}
+
+\item[(a)] Run a linear regression of \verb|sales| on \verb|TV|, \verb|radio|, and \verb|newspaper|, and produce a set of standard diagnostic plots. What model misspecification issue(s) appear to be present in these data?
+
+\item[(b)] Address the above misspecification issues using one or more of the strategies discussed in Unit 3. Report a set of statistical estimates, confidence intervals, and test results you think you can trust. 
+
+\item[(c)] Discuss the findings from part (b) in language that a policymaker could comprehend, including any caveats or limitations of the analysis.
+
+\end{enumerate}
+
+\end{prob}
+
+\begin{sol}
+
+\end{sol}
+
+
+
+\end{document}

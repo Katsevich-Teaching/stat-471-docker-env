@@ -1,0 +1,13 @@
+version: "3.9"
+services: 
+  stat-471:
+    build: .
+    image: kuangda/stat-471
+    ports: 
+      - "8787:8787"
+    environment: 
+      - ROOT=TRUE
+      - PASSWORD=stat-471
+      - DISABLE_AUTH=true
+    volumes: 
+      - .:/home/rstudio
