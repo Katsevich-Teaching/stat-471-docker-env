@@ -16,3 +16,5 @@ This is the repository for building Wharton STAT 471's docker environment.
 ## Known Issue
 
 - Now the compuation is on CPU. We need to integrate NVIDIA Container Toolkit into the environment to have the code run on GPU.
+- Now the docker file is over 11 GBs, which is very part. Nvidia Cuda 11 seems the one to be blamed.
+- The image on the DockerHub is bulit for Intel CPU. M1 Mac users may need to build the docker image by themselves. The line 16 to line 23 in the dockerfile may need to be changed according to the link in line 15.
