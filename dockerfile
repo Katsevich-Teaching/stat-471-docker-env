@@ -23,6 +23,7 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install cuda
 
 RUN R -e "install.packages('glmnet')"
+RUN R -e "install.packages('randomForest')"
 
 # # Deal with CUDA LD warning
 # # https://stackoverflow.com/questions/64193633/could-not-load-dynamic-library-libcublas-so-10-dlerror-libcublas-so-10-cann
@@ -31,3 +32,4 @@ RUN R -e "install.packages('glmnet')"
 # RUN chmod 777 /usr/lib/x86_64-linux-gnu/libcuda*
 
 COPY .Renviron /home/rstudio/.Renviron
+
