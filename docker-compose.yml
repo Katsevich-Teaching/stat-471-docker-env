@@ -2,7 +2,7 @@ version: "3.9"
 services: 
   stat-471:
     build: .
-    image: kuangda/stat-471
+    image: ekatsevi/stat-471
     ports: 
       - "8787:8787"
     environment: 

@@ -24,6 +24,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install cuda
 
 RUN R -e "install.packages('glmnet')"
 RUN R -e "install.packages('randomForest')"
+RUN R -e "install.packages('cowplot')"
+
+
 
 # # Deal with CUDA LD warning
 # # https://stackoverflow.com/questions/64193633/could-not-load-dynamic-library-libcublas-so-10-dlerror-libcublas-so-10-cann
