@@ -14,6 +14,8 @@ RUN R -e "library(reticulate); \
     install_miniconda(); install_tensorflow();" 
 
 RUN R -e "install.packages('glmnet')"
+RUN R -e "install.packages('randomForest')"
+RUN R -e "install.packages('cowplot')"
 
 COPY .Renviron /home/rstudio/.Renviron
 COPY .Rprofile /home/rstudio/.Rprofile
