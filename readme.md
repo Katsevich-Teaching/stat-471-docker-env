@@ -9,7 +9,7 @@ docker pull ekatsevi/stat-961
 docker-compose up
 ```
 
-## To build and publich docker image for the host
+## To build and publish a docker image for the host
 
 ```{bash}
 docker-compose build
