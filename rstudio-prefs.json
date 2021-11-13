@@ -1,0 +1,8 @@
+{ 
+    "save_workspace": "never",
+    "always_save_history": false,
+    "reuse_sessions_for_project_links": true,
+    "initial_working_directory": "~/stat-471",
+    "default_sweave_engine": "knitr",
+    "posix_terminal_shell": "bash"
+}

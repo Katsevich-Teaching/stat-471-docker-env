@@ -19,3 +19,6 @@ RUN R -e "install.packages('cowplot')"
 
 COPY .Renviron /home/rstudio/.Renviron
 COPY .Rprofile /home/rstudio/.Rprofile
+
+COPY rstudio-prefs.json /home/rstudio/.config/rstudio/rstudio-prefs.json
+RUN chown -R rstudio:rstudio /home/rstudio/.config
