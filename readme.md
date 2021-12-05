@@ -1,11 +1,11 @@
 # Stat 471 Docker Env
 
-This is the repository for building Wharton STAT 471's docker environment. The image is build upon [Stat-961 Docker env](https://github.com/Katsevich-Teaching/stat-961-docker-env/blob/main/readme.md).
+This is the repository for building Wharton STAT 471's docker environment. 
 
 ## To use docker container
 
 ```{bash}
-docker pull ekatsevi/stat-961
+docker pull ekatsevi/stat-471
 docker-compose up
 ```
 
